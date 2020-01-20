@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/jcopperman/hotelcalifornia.svg?branch=master)](https://travis-ci.com/jcopperman/hotelcalifornia)
+[![Build Status](https://travis-ci.org/jcopperman/NUnit.Web.Tests.svg?branch=master)](https://travis-ci.org/jcopperman/NUnit.Web.Tests)
 
 # Project: hotelcalifornia
 This repository is a story about an intrepid adventurer who seeks to uncover the secrets of a fictitious hotel by testing and flexing it's booking system.
