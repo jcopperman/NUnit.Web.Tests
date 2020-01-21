@@ -26,28 +26,49 @@ namespace NUnit.Web.Tests
         [Test]
         public void Test_Case_001_CreateNewBookingRecord()
         {
+            //Arrange
             NavigatetToTheHomepage();
             IWebElement firstname, lastname, totalprice, checkin, checkout, savebutton;
             SelectElement selectElement;
             InitializeElements(out firstname, out lastname, out totalprice, out selectElement, out checkin, out checkout, out savebutton);
+
+            //Act
             EnterValidValues(firstname, lastname, totalprice, checkin, checkout, selectElement);
             SaveRecord(savebutton);
-            WaitForRecordToPersist();
+            WaitForDatabaseChanges();
 
-            Assert.Pass();
+            //Assert
+            VerifyNewRecordIsPersisted();
+
         }
 
         [Test]
         public void Test_Case_002_DeleteExistingBookingRecord()
-        {
-            //TODO: Find the row ID create by the create function to determine which delete button corresponds. 
+        { 
+            // Arrange
             NavigatetToTheHomepage();
 
-            Thread.Sleep(5000);
-            Assert.Pass();
+            //Act
+            _driver.FindElement(By.CssSelector("#\\39 899 input")).Click();
+            WaitForDatabaseChanges();
+
+            //Assert
+            VerifyNewRecordIsRemoved();
         }
 
-        private static void WaitForRecordToPersist()
+        private void VerifyNewRecordIsPersisted()
+        {
+            Assert.That(_driver.FindElement(By.CssSelector("#\\39 899 > .col-md-2:nth-child(1) > p")).Text, Is.EqualTo("Doctor"));
+            Assert.That(_driver.FindElement(By.CssSelector("#\\39 899 > .col-md-2:nth-child(2) > p")).Text, Is.EqualTo("Who"));
+        }
+
+        private void VerifyNewRecordIsRemoved()
+        {
+            Assert.That(_driver.FindElement(By.CssSelector("#\\39 899 > .col-md-2:nth-child(1) > p")).Text, Is.Not.EqualTo("Doctor"));
+            Assert.That(_driver.FindElement(By.CssSelector("#\\39 899 > .col-md-2:nth-child(2) > p")).Text, Is.Not.EqualTo("Who"));
+        }
+
+        private static void WaitForDatabaseChanges()
         {
             Thread.Sleep(5000);
         }
