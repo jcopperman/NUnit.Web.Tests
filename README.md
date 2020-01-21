@@ -1,7 +1,7 @@
 ## PART 1: Manual test approach
 
 ### Summary
-The following test cases are intended to cover testing for basic CRUD operations (Create, Read, Update & Delete)
+The following test cases are intended to cover testing for basic CRUD operations (Create, Read, Update & Delete). 
 In this exercise only Create and Delete are verified with both positive and negative scenarios (negative values, past dates, unexpected characters and empty values).
 
 #### TEST CASE 001: Create a valid booking record

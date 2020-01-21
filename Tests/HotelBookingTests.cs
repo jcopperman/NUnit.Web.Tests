@@ -1,24 +1,53 @@
 using NUnit.Framework;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
 using System;
+using System.Web;
+using System.Text;
+using System.Net;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
+using OpenQA.Selenium.Support.UI;
 using System.Threading;
 
 namespace NUnit.Web.Tests
 {
+    [TestFixture("chrome", "latest", "Windows 7", "", "")]
     public class Tests
     {
-        IWebDriver _driver;
+        private IWebDriver _driver;
+        private String browser;
+        private String version;
+        private String os;
+        private String deviceName;
+        private String deviceOrientation;
 
         public string homeUrl = "http://hotel-test.equalexperts.io/";
 
-        [SetUp]
-        public void Setup()
+        public Tests(String browser, String version, String os, String deviceName, String deviceOrientation)
         {
-            _driver = new ChromeDriver();
+            this.browser = browser;
+            this.version = version;
+            this.os = os;
+            this.deviceName = deviceName;
+            this.deviceOrientation = deviceOrientation;
+        }
+
+        [SetUp]
+        public void Init()
+        {
+            DesiredCapabilities caps = new DesiredCapabilities();
+            caps.SetCapability("platform", "WIN10");
+            caps.SetCapability("browserName", "chrome");
+            caps.SetCapability("version", "79");
+            caps.SetCapability("deviceName", deviceName);
+            caps.SetCapability("deviceOrientation", deviceOrientation);
+            caps.SetCapability("username", "ab220ca5b1b949f9b6b750b800fb6d2d");
+            caps.SetCapability("accessKey", "6ef2e9f8186691f40bd886604e7b6e41");
+            caps.SetCapability("name", TestContext.CurrentContext.Test.Name);
+
+            _driver = new RemoteWebDriver(new Uri("https://hub.testingbot.com/wd/hub"), caps, TimeSpan.FromSeconds(600));
 
         }
+
         public void NavigatetToTheHomepage()
         {
             _driver.Navigate().GoToUrl(homeUrl);
@@ -37,7 +66,6 @@ namespace NUnit.Web.Tests
             EnterValidValues(firstname, lastname, totalprice, checkin, checkout, selectElement);
             SaveRecord(savebutton);
 
-            // Todo: Capture and store the row ID of the persisted record
 
             WaitForDatabaseChanges();
 
@@ -124,9 +152,20 @@ namespace NUnit.Web.Tests
         }
 
         [TearDown]
-        public void CloseBrowser()
+        public void CleanUp()
         {
-            _driver.Close();
+            //bool passed = TestContext.CurrentContext.Result.Outcome == Framework.Interfaces.TestStatus.Passed;
+            //try
+            //{
+            //    // Logs the result to TestingBot
+            //    ((IJavaScriptExecutor)_driver).ExecuteScript("tb:test-result=" + (passed ? "passed" : "failed"));
+            //}
+            //finally
+            //{
+            //    // Terminates the remote webdriver session
+            //    _driver.Quit();
+            //}
+            _driver.Quit();
         }
     }
 }
