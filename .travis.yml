@@ -2,8 +2,8 @@
 language: csharp
 solution: NUnit.Web.Tests.sln
 before_install:
-  - sudo apt-get install nunit-console
+  - sudo apt-get install nunit3-console
 before_script:
   - nuget restore NUnit.Web.Tests.sln
 after_script:
-  - nunit-console NUnit.Web.Tests.dll
+  - nunit3-console NUnit.Web.Tests.dll 
