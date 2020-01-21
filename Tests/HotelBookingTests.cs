@@ -1,16 +1,18 @@
-using NUnit.Framework;
 using System;
-using System.Web;
-using System.Text;
+using System.IO;
 using System.Net;
-using OpenQA.Selenium;
+using System.Text;
+using System.Text.RegularExpressions;
+using NUnit.Framework;
 using OpenQA.Selenium.Remote;
-using OpenQA.Selenium.Support.UI;
+using System.Collections.Generic;
+using OpenQA.Selenium;
 using System.Threading;
+using OpenQA.Selenium.Support.UI;
 
 namespace NUnit.Web.Tests
 {
-    [TestFixture("chrome", "latest", "Windows 7", "", "")]
+    [SetUpFixture]
     public class Tests
     {
         private IWebDriver _driver;
@@ -34,15 +36,15 @@ namespace NUnit.Web.Tests
         [SetUp]
         public void Init()
         {
-            DesiredCapabilities caps = new DesiredCapabilities();
-            caps.SetCapability("platform", "WIN10");
-            caps.SetCapability("browserName", "chrome");
-            caps.SetCapability("version", "79");
-            caps.SetCapability("deviceName", deviceName);
-            caps.SetCapability("deviceOrientation", deviceOrientation);
-            caps.SetCapability("username", "ab220ca5b1b949f9b6b750b800fb6d2d");
-            caps.SetCapability("accessKey", "6ef2e9f8186691f40bd886604e7b6e41");
-            caps.SetCapability("name", TestContext.CurrentContext.Test.Name);
+            var caps = new RemoteSessionSettings();
+            caps.AddMetadataSetting("platform", "WIN10");
+            caps.AddMetadataSetting("browserName", "chrome");
+            caps.AddMetadataSetting("version", "79");
+            caps.AddMetadataSetting("deviceName", deviceName);
+            caps.AddMetadataSetting("deviceOrientation", deviceOrientation);
+            caps.AddMetadataSetting("client_key", "ab220ca5b1b949f9b6b750b800fb6d2d");
+            caps.AddMetadataSetting("client_secret", "6ef2e9f8186691f40bd886604e7b6e41");
+            caps.AddMetadataSetting("name", TestContext.CurrentContext.Test.Name);
 
             _driver = new RemoteWebDriver(new Uri("https://hub.testingbot.com/wd/hub"), caps, TimeSpan.FromSeconds(600));
 
@@ -165,7 +167,7 @@ namespace NUnit.Web.Tests
             //    // Terminates the remote webdriver session
             //    _driver.Quit();
             //}
-            _driver.Quit();
+            //_driver.Quit();
         }
     }
 }
