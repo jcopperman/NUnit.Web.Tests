@@ -2,6 +2,7 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using System;
 using System.Threading;
 
 namespace NUnit.Web.Tests
@@ -35,11 +36,13 @@ namespace NUnit.Web.Tests
             //Act
             EnterValidValues(firstname, lastname, totalprice, checkin, checkout, selectElement);
             SaveRecord(savebutton);
+
+            // Todo: Capture and store the row ID of the persisted record
+
             WaitForDatabaseChanges();
 
             //Assert
             VerifyNewRecordIsPersisted();
-
         }
 
         [Test]
@@ -49,23 +52,42 @@ namespace NUnit.Web.Tests
             NavigatetToTheHomepage();
 
             //Act
-            _driver.FindElement(By.CssSelector("#\\39 899 input")).Click();
+            FindAndDeleteNewRecord();
             WaitForDatabaseChanges();
 
             //Assert
             VerifyNewRecordIsRemoved();
         }
 
+        private void FindAndDeleteNewRecord()
+        {
+            var table = _driver.FindElement(By.TagName("table"));
+            var rows = table.FindElements(By.TagName("tr"));
+
+            foreach (var row in rows)
+            {
+                if (row.Text.Contains("Doctor"))
+                {
+                    //Console.WriteLine(row.Text);
+
+                    var tds = row.FindElements(By.TagName("a"));
+                    foreach (var entry in tds)
+                    {
+                        Console.WriteLine(entry.Text);
+                        entry.Click();
+                    }
+                }
+            }
+        }                
+
         private void VerifyNewRecordIsPersisted()
         {
-            Assert.That(_driver.FindElement(By.CssSelector("#\\39 899 > .col-md-2:nth-child(1) > p")).Text, Is.EqualTo("Doctor"));
-            Assert.That(_driver.FindElement(By.CssSelector("#\\39 899 > .col-md-2:nth-child(2) > p")).Text, Is.EqualTo("Who"));
+            Assert.IsTrue(_driver.PageSource.Contains("Doctor"));
         }
 
         private void VerifyNewRecordIsRemoved()
         {
-            Assert.That(_driver.FindElement(By.CssSelector("#\\39 899 > .col-md-2:nth-child(1) > p")).Text, Is.Not.EqualTo("Doctor"));
-            Assert.That(_driver.FindElement(By.CssSelector("#\\39 899 > .col-md-2:nth-child(2) > p")).Text, Is.Not.EqualTo("Who"));
+            Assert.IsFalse(_driver.PageSource.Contains("Doctor"));
         }
 
         private static void WaitForDatabaseChanges()
