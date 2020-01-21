@@ -1,3 +1,5 @@
+Build Summary: [![Build Status](https://travis-ci.com/jcopperman/hotelcalifornia.svg?branch=master)](https://travis-ci.com/jcopperman/hotelcalifornia)
+
 ## PART 1: Manual test approach
 
 ### Summary
@@ -45,11 +47,18 @@ In this exercise only Create and Delete are verified with both positive and nega
 ### Automation Summary
 Technology: .NET Core project using NUnit and Selenium Webdriver which is deployed via Travis CI
 
-View test execution on BrowserStack here
+Run locally from Visual Studio with NUnit Test Runner:
 
-OR
+Prequisites:
+1. Clone this repository with ``` git clone https://github.com/jcopperman/NUnit.Web.Tests.git ```
+1. Install Visual Studio 2019 Community
+2. Install Git for Windows
+2. Run Visual Studio as Administrator
+4. Build Solution and run Tests from the Test Explorer
 
-Run locally from Visual Studio with NUnit Test Runner
+
+
+
 
 
 
